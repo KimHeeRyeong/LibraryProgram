@@ -49,10 +49,20 @@ int main() {
 	switch (receiveMsg.GetCode(message))
 	{
 	case 1: {
+		//도서 목록 보내기
 		char* str= bookData.SendBookList();
 		int length = strlen(str)+1;
 		send(hClntSock, str, length, 0);
 		free(str);
+		//대출할 도서 번호 받기
+		memset(message, 0, sizeof(message));
+		strLen = recv(hClntSock, message, sizeof(message) - 1, 0);
+		if (strLen == -1) {
+			ErrorHandling("recv() error");
+		}
+		else {
+			receiveMsg.PrintList(message);
+		}
 		break; 
 	}
 	case 2:

@@ -1,6 +1,6 @@
 [
   {
-    "id": 0,
+    "id": 1,
     "name": "당신은 뇌를 고칠 수 있다",
     "writer": "톰 오브라이언",
     "translator": "이시은",
@@ -9,7 +9,7 @@
     "lend": false
   },
   {
-    "id": 1,
+    "id": 2,
     "name": "90년생이 온다",
     "writer": "김홍택",
     "translator": null,
@@ -18,7 +18,7 @@
     "lend": false
   },
   {
-    "id": 2,
+    "id": 3,
     "name": "반일 종족주의",
     "writer": "이영훈, 김낙녁 외 4명",
     "translator": null,

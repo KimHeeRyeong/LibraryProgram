@@ -57,8 +57,30 @@ int main() {
 			else {
 				recvMsg.PrintList(message);
 			}
+			printf("대출할 도서의 id를 입력해주세요!(최대 3권까지 대출 가능)\n");
 			//대출할 도서 번호 보내기
-
+			int borrow[3] = {0};
+			int cnt = 0;
+			for (int i = 0; i < 3; i++) {
+				int keep = 0;
+				printf("->");
+				scanf_s("%d", borrow+i);
+				if (i < 2) {
+					printf("대출을 계속하려면 1을 눌러주세요!");
+					scanf_s("%d", &keep);
+					if (keep != 1) {
+						cnt = i+1;
+						break;
+					}
+				}
+				else {
+					cnt = i+1;
+				}
+			}
+			str = sendMsg.BorrowBooks(borrow, cnt);
+			length = strlen(str) + 1;
+			send(hSocket, str, length, 0);
+			free(str);
 			//응답
 			break; 
 		}

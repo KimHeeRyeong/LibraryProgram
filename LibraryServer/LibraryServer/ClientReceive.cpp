@@ -1,5 +1,4 @@
 #include "ClientReceive.h"
-#include "BookData.h"
 
 
 ClientReceive::ClientReceive()
@@ -19,3 +18,15 @@ int ClientReceive::GetCode(const char str[])
 	d.RemoveAllMembers();
 	return i;
 }
+
+char* ClientReceive::PrintRequestBrr(const char str[], BookData* bookData)
+{
+	Document d;
+	d.Parse(str);
+	for (auto& id : d["borrow"].GetArray()) {
+		bookData->CheckCanBorrow(id.GetInt());
+	}
+	d.RemoveAllMembers();
+	return nullptr;
+}
+
