@@ -51,7 +51,7 @@ int main() {
 			free(str);
 			//도서목록 받고 출력
 			strLen = recv(hSocket, message, sizeof(message) - 1, 0);
-			if (strLen == 0) {
+			if (strLen == -1) {
 				ErrorHandlig("recv() error");
 			}
 			else {
