@@ -1,0 +1,29 @@
+[
+  {
+    "id": 0,
+    "name": "당신은 뇌를 고칠 수 있다",
+    "writer": "톰 오브라이언",
+    "translator": "이시은",
+    "publisher": "브론스테인",
+    "cost": 19800,
+    "lend": false
+  },
+  {
+    "id": 1,
+    "name": "90년생이 온다",
+    "writer": "김홍택",
+    "translator": null,
+    "publisher": "웨일북",
+    "cost": 14000,
+    "lend": false
+  },
+  {
+    "id": 2,
+    "name": "반일 종족주의",
+    "writer": "이영훈, 김낙녁 외 4명",
+    "translator": null,
+    "publisher": "미래사",
+    "cost": 20000,
+    "lend": false
+  }
+]
