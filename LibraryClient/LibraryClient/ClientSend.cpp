@@ -8,12 +8,16 @@ ClientSend::ClientSend()
 	requestBookList.AddMember("code", Value().SetInt(1), requestBookList.GetAllocator());
 
 	borrowBooks.SetObject();
-	borrowBooks.AddMember("code", Value().SetInt(2), borrowBooks.GetAllocator());
-	borrowBooks.AddMember("borrow", Value().SetArray(), borrowBooks.GetAllocator());//ºô¸± Ã¥ id
+	borrowBooks.AddMember("code", Value().SetInt(1), borrowBooks.GetAllocator());
+	borrowBooks.AddMember("borrow", Value().SetInt(-1), borrowBooks.GetAllocator());//ºô¸± Ã¥ id
 
 	returnBooks.SetObject();
-	returnBooks.AddMember("code", Value().SetInt(3), borrowBooks.GetAllocator());
-	returnBooks.AddMember("return", Value().SetArray(), borrowBooks.GetAllocator());//¹Ý³³ÇÒ Ã¥ id
+	returnBooks.AddMember("code", Value().SetInt(2), returnBooks.GetAllocator());
+	returnBooks.AddMember("return", Value().SetInt(-1), returnBooks.GetAllocator());//¹Ý³³ÇÒ Ã¥ id
+
+	exit.SetObject();
+	exit.AddMember("code", Value().SetInt(3), exit.GetAllocator());
+
 }
 
 ClientSend::~ClientSend()
@@ -33,31 +37,38 @@ char * ClientSend::RequestBookList()
 
 	return _strdup(buffer.GetString());
 }
-char * ClientSend::BorrowBooks(int brrs[], int cnt)
+char * ClientSend::BorrowBook(int brr)
 {
-	for (int i = 0; i < cnt; i++) {
-		borrowBooks["borrow"].PushBack(Value().SetInt(brrs[i]), borrowBooks.GetAllocator());
-	}
+	borrowBooks["borrow"].SetInt(brr);
 	StringBuffer buffer;
 	buffer.Clear();
 
 	Writer<StringBuffer> writer(buffer);
 	borrowBooks.Accept(writer);
-	borrowBooks["borrow"].Clear();
+	borrowBooks["borrow"].SetInt(-1);
 
 	return _strdup(buffer.GetString());
 }
-char * ClientSend::ReturnBooks(int brrs[], int cnt)
+char * ClientSend::ReturnBook(int brr)
 {
-	for (int i = 0; i < cnt; i++) {
-		returnBooks["return"].PushBack(Value().SetInt(brrs[i]), returnBooks.GetAllocator());
-	}
+	returnBooks["return"].SetInt(brr);
 	StringBuffer buffer;
 	buffer.Clear();
 
 	Writer<StringBuffer> writer(buffer);
 	returnBooks.Accept(writer);
-	returnBooks["return"].Clear();
+	returnBooks["return"].SetInt(-1);
+
+	return _strdup(buffer.GetString());
+}
+
+char * ClientSend::ExitProgram()
+{
+	StringBuffer buffer;
+	buffer.Clear();
+
+	Writer<StringBuffer> writer(buffer);
+	exit.Accept(writer);
 
 	return _strdup(buffer.GetString());
 }

@@ -57,39 +57,55 @@ int main() {
 			else {
 				recvMsg.PrintList(message);
 			}
-			printf("대출할 도서의 id를 입력해주세요!(최대 3권까지 대출 가능)\n");
+			printf("대출할 도서의 id를 입력해주세요!\n");
 			//대출할 도서 번호 보내기
-			int borrow[3] = {0};
-			int cnt = 0;
-			for (int i = 0; i < 3; i++) {
-				int keep = 0;
-				printf("->");
-				scanf_s("%d", borrow+i);
-				if (i < 2) {
-					printf("대출을 계속하려면 1을 눌러주세요!");
-					scanf_s("%d", &keep);
-					if (keep != 1) {
-						cnt = i+1;
-						break;
-					}
-				}
-				else {
-					cnt = i+1;
-				}
-			}
-			str = sendMsg.BorrowBooks(borrow, cnt);
+			int borrow = 0;
+			printf("->");
+			scanf_s("%d", &borrow);
+			str = sendMsg.BorrowBook(borrow);
 			length = strlen(str) + 1;
 			send(hSocket, str, length, 0);
 			free(str);
-			//응답
+			
+			//대출 결과 받기
+			memset(message, 0, sizeof(message));
+			strLen = recv(hSocket, message, sizeof(message) - 1, 0);
+			recvMsg.BrrResult(message);
 			break; 
 		}
 		case 2:
-			break;
+		{
+			if (recvMsg.CheckCanReturn()) {
+				recvMsg.PrintBrrList();
+				printf("반납할 도서의 id를 입력해주세요!\n");
+				//반납할 도서 번호 보내기
+				int ret = 0;
+				printf("->");
+				scanf_s("%d", &ret);
+				if (recvMsg.CheckBrrBookID(ret)) {
+					char* str = sendMsg.ReturnBook(ret);
+					int length = strlen(str) + 1;
+					send(hSocket, str, length, 0);
+					free(str);
+
+					//반납 결과 받기
+					memset(message, 0, sizeof(message));
+					strLen = recv(hSocket, message, sizeof(message) - 1, 0);
+					recvMsg.ReturnResult(message);
+				}
+			}
+			break; 
+		}
 		case 3:
+		{
+			char* str = sendMsg.RequestBookList();
+			int length = strlen(str) + 1;
+			send(hSocket, str, length, 0);
+			free(str);
 			retry = true;
-			printf("도서 관리 프로그램을 종료합니다");
-			break;
+			printf("도서 관리 프로그램을 종료합니다\n");
+			break; 
+		}
 		default:
 			retry = true;
 			printf("잘못된 입력입니다! 1~3까지의 숫자를 입력해주시기 바랍니다.\n");
@@ -98,13 +114,8 @@ int main() {
 		if (retry == true) {
 			continue;
 		}
-		/*strLen = recv(hSocket, message, sizeof(message) - 1, 0);
-		if (strLen == -1) {
-			ErrorHandlig("recv() error");
-		}*/
 		cho = 0;
 	}
-	printf("Server->%s", message);
 	closesocket(hSocket);
 	WSACleanup();
 	system("pause");

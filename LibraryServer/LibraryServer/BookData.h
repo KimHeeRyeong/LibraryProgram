@@ -8,7 +8,8 @@ public:
 	BookData();
 	~BookData();
 	char* SendBookList();
-	int CheckCanBorrow(int id);
+	Document CheckCanBorrow(int id);
+	Document CheckCanReturn(int id);
 private:
 	Document bookData;
 };

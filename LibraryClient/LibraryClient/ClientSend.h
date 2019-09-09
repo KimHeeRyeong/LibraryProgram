@@ -7,12 +7,14 @@ public:
 	ClientSend();
 	~ClientSend();
 	char* RequestBookList();
-	char* BorrowBooks(int brrs[], int cnt);
-	char * ReturnBooks(int brrs[], int cnt);
+	char* BorrowBook(int brr);
+	char * ReturnBook(int brr);
+	char* ExitProgram();
 
 private:
 	Document requestBookList;
 	Document borrowBooks;
 	Document returnBooks;
+	Document exit;
 };
 

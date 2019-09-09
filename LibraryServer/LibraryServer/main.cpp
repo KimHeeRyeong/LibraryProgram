@@ -44,34 +44,49 @@ int main() {
 	if (hClntSock == INVALID_SOCKET) {
 		ErrorHandling("connect() error");
 	}
-	strLen = recv(hClntSock, message, sizeof(message) - 1, 0);
-
-	switch (receiveMsg.GetCode(message))
-	{
-	case 1: {
-		//도서 목록 보내기
-		char* str= bookData.SendBookList();
-		int length = strlen(str)+1;
-		send(hClntSock, str, length, 0);
-		free(str);
-		//대출할 도서 번호 받기
+	bool end = false;
+	while (!end) {
 		memset(message, 0, sizeof(message));
 		strLen = recv(hClntSock, message, sizeof(message) - 1, 0);
-		if (strLen == -1) {
-			ErrorHandling("recv() error");
+
+		switch (receiveMsg.GetCode(message))
+		{
+		case 1: {
+			//도서 목록 보내기
+			char* str = bookData.SendBookList();
+			int length = strlen(str) + 1;
+			send(hClntSock, str, length, 0);
+			free(str);
+			//대출할 도서 번호 받기
+			memset(message, 0, sizeof(message));
+			strLen = recv(hClntSock, message, sizeof(message) - 1, 0);
+			if (strLen == -1) {
+				ErrorHandling("recv() error");
+			}
+			else {
+				str = receiveMsg.PrintRequestBrr(message, &bookData);
+			}
+			//결과 보내기
+			length = strlen(str) + 1;
+			send(hClntSock, str, length, 0);
+			free(str);
+			break;
 		}
-		else {
-			receiveMsg.PrintList(message);
+		case 2: {
+			char* str=receiveMsg.ReturnBooks(message, &bookData);
+			int length = strlen(str) + 1;
+			send(hClntSock, str, length, 0);
+			free(str);
+			break; 
 		}
-		break; 
-	}
-	case 2:
-		break;
-	case 3:
-		break;
-	default:
-		printf("GetCode() Error");
-		break;
+		case 3:
+			end = true;
+			break;
+		default:
+			printf("GetCode() Error");
+			end = true;
+			break;
+		}
 	}
 	closesocket(hClntSock);
 	closesocket(hServSock);
